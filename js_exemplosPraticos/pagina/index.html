@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="index.css" />
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <link rel="stylesheet" href="../../semantic/dist/semantic.css" />
+    <title>Pagina</title>
+  </head>
+  <body>
+    <div class="ui placeholder segment">
+      <div class="ui two column stackable center aligned grid">
+        <div class="ui vertical divider">Or</div>
+        <div class="middle aligned row">
+          <div class="column">
+            <div class="ui icon header">
+              <i class="search icon"></i>
+              INTEGRANTE
+            </div>
+            <div id="valorIntegrante" class="fixed"></div>
+            <button id="changeIntegrante" class="ui secondary button">
+              Change
+            </button>
+            <div class="ui icon input">
+              <input id="integranteDigitado" type="text" placeholder="..." />
+              <button id="adicionarIntegrante" class="ui button">
+                Adicionar
+              </button>
+            </div>
+          </div>
+          <div class="column">
+            <div class="ui icon header">
+              <i class="world icon"></i>
+              TEMA
+            </div>
+            <div id="valorTema" class="fixed"></div>
+            <button id="changeTema" class="ui secondary button">
+              Change
+            </button>
+            <div class="ui icon input">
+              <input id="temaDigitado" type="text" placeholder="..." />
+              <button id="adicionarTema" class="ui button">
+                Adicionar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>

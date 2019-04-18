@@ -1,0 +1,36 @@
+#divIntegrante {
+  margin: 30px;
+}
+#divTema {
+  margin: 30px;
+}
+
+.ui > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#integrante {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+#tema {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+#valorIntegrante {
+  padding: 20px;
+  color: crimson;
+  font-size: 21px;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
+
+#valorTema {
+  padding: 20px;
+  color: crimson;
+  font-size: 21px;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
