@@ -33,7 +33,8 @@ function transformToArray(element) {
       if (index == 0) {
         if (
           verifyAfterElement &&
-          characterAfter == characterAfter.toLowerCase()
+          characterAfter == characterAfter.toLowerCase() &&
+          index + 2 >= elementLength
         ) {
           const total = actualCharacter + characterAfter
           transformedArray.push(total)
@@ -45,53 +46,97 @@ function transformToArray(element) {
           const total = actualCharacter
           transformedArray.push(total)
         }
-      }
-      if (index == elementLength - 1) {
-        const total = actualCharacter
-        transformedArray.push(total)
-      }
-      if (!verifyBeforeElement && index != 0) {
-        const total = actualCharacter
-        transformedArray.push(total)
-      }
+        if (verifyAfterElement && index + 2 < elementLength) {
+          const characterAfterAfter = element.charAt(index + 2)
+          const verifyAfterAfterElement = isNaN(Number(characterAfterAfter))
+          if (
+            verifyAfterAfterElement &&
+            characterAfter != characterAfter.toUpperCase()
+          ) {
+            const total = actualCharacter + characterAfter
+            transformedArray.push(total)
+          }
+        }
+      } // OK
 
       if (
-        verifyBeforeElement &&
-        verifyAfterElement &&
+        index == elementLength - 1 &&
         actualCharacter == actualCharacter.toUpperCase()
       ) {
-        if (
-          characterBefore == characterBefore.toLowerCase() &&
-          characterAfter == characterAfter.toLowerCase()
-        ) {
-          // lower actual lower
-          const total = actualCharacter + characterAfter
-          transformedArray.push(total)
+        const total = actualCharacter
+        transformedArray.push(total)
+      }
+
+      // comeco
+      if (index != 0 && index != elementLength - 1) {
+        if (!verifyBeforeElement && verifyAfterElement) {
+          if (characterAfter == characterAfter.toLowerCase()) {
+            const total = actualCharacter + characterAfter
+            transformedArray.push(total)
+          } else {
+            const total = actualCharacter
+            transformedArray.push(total)
+          }
         }
 
         if (
-          characterBefore == characterBefore.toUpperCase() &&
-          characterAfter == characterAfter.toUpperCase()
+          verifyBeforeElement &&
+          verifyAfterElement &&
+          actualCharacter == actualCharacter.toUpperCase()
         ) {
-          // upper actual upper
-          const total = actualCharacter
-          transformedArray.push(total)
-        }
+          if (
+            characterBefore == characterBefore.toLowerCase() &&
+            characterAfter == characterAfter.toLowerCase()
+          ) {
+            // lower actual lower
+            if (index + 2 < elementLength) {
+              const characterAfterAfter = element.charAt(index + 2)
+              const verifyAfterAfterElement = isNaN(Number(characterAfterAfter))
+              if (verifyAfterAfterElement) {
+                const total = actualCharacter + characterAfter
+                transformedArray.push(total)
+              }
+            } else {
+              const total = actualCharacter + characterAfter
+              transformedArray.push(total)
+            }
+          }
 
-        if (
-          characterBefore == characterBefore.toLowerCase() &&
-          characterAfter == characterAfter.toUpperCase()
-        ) {
-          const total = actualCharacter
-          transformedArray.push(total)
-        }
+          if (
+            characterBefore == characterBefore.toUpperCase() &&
+            characterAfter == characterAfter.toUpperCase()
+          ) {
+            // upper actual upper
+            const total = actualCharacter
+            transformedArray.push(total)
+          }
 
-        if (
-          characterBefore == characterBefore.toUpperCase() &&
-          characterAfter == characterAfter.toLowerCase()
-        ) {
-          const total = actualCharacter
-          transformedArray.push(total)
+          if (
+            characterBefore == characterBefore.toLowerCase() &&
+            characterAfter == characterAfter.toUpperCase()
+          ) {
+            // lower actual upper
+            const total = actualCharacter
+            transformedArray.push(total)
+          }
+
+          if (
+            characterBefore == characterBefore.toUpperCase() &&
+            characterAfter == characterAfter.toLowerCase()
+          ) {
+            // upper actual lower
+            if (index + 2 < elementLength) {
+              const characterAfterAfter = element.charAt(index + 2)
+              const verifyAfterAfterElement = isNaN(Number(characterAfterAfter))
+              if (verifyAfterAfterElement) {
+                const total = actualCharacter + characterAfter
+                transformedArray.push(total)
+              }
+            } else {
+              const total = actualCharacter + characterAfter
+              transformedArray.push(total)
+            }
+          }
         }
       }
     }
@@ -116,5 +161,15 @@ function transformToArray(element) {
   return transformedArray
 }
 
-const resultado = transformToArray("H2")
-console.log(resultado)
+const first = transformToArray("HCl")
+console.log(first)
+const second = transformToArray("NaOH")
+console.log(second)
+
+const firstResult = transformToArray("NaCl")
+console.log(firstResult)
+const secondResult = transformToArray("H2O")
+console.log(secondResult)
+
+const seila = transformToArray("Na4HBrSO4CaUr6")
+console.log(seila)
