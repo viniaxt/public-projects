@@ -354,6 +354,25 @@ function balance(numberOfReagentAtoms, numberOfProductAtoms) {
   var newFirstProduct = []
   var newSecondProduct = []
 
+  const reagentDiff = []
+  const productDiff = []
+  for (let i = 0; i < numberOfReagentAtoms.length; i++) {
+    const atomsOfReagent = numberOfReagentAtoms[i]
+    const atomsOfProduct = numberOfProductAtoms[i]
+    if (atomsOfReagent < atomsOfProduct) {
+      reagentDiff.push(reagent[i])
+    }
+  }
+  for (let i = 0; i < numberOfReagentAtoms.length; i++) {
+    const atomsOfReagent = numberOfReagentAtoms[i]
+    const atomsOfProduct = numberOfProductAtoms[i]
+    if (atomsOfReagent > atomsOfProduct) {
+      productDiff.push(product[i])
+    }
+  }
+  console.log("DIFFFF " + reagentDiff)
+  console.log("DIFFFFF " + productDiff)
+
   console.log("CHEGOU NO BALANCE!!")
   // first, we are going to get atomsOfProduct > atomsOfReagent
   for (let i = 0; i < numberOfReagentAtoms.length; i++) {
@@ -364,10 +383,15 @@ function balance(numberOfReagentAtoms, numberOfProductAtoms) {
       firstClean.forEach(atom => {
         if (atom == reagent[i]) {
           if (atomsOfReagent == 1) {
-            newFirstReagent = firstClean.map(e => {
-              return e + atomsOfProduct
-            })
             resultFirstReagent = atomsOfProduct
+            newFirstReagent = firstClean.map(e => {
+              if (isNaN(Number(e[e.length - 1]))) {
+                return e + atomsOfProduct
+              } else {
+                const number = e[e.length - 1]
+                return e.replace(number, atomsOfReagent)
+              }
+            })
           } else {
             if (atomsOfProduct % 2 === 0 && atomsOfReagent % 2 === 0) {
               resultFirstReagent = (atomsOfReagent * atomsOfProduct) / 2
@@ -375,19 +399,26 @@ function balance(numberOfReagentAtoms, numberOfProductAtoms) {
               resultFirstReagent = atomsOfReagent * atomsOfProduct
             }
             newFirstReagent = firstClean.map(e => {
-              return e[e.length - 1] + resultfirstReagent
+              const number = e[e.length - 1]
+              return e.replace(number, atomsOfReagent)
             })
           }
         }
       })
+      if (newFirstReagent == 0) {
+        newFirstReagent = firstClean
+      }
       secondClean.forEach(atom => {
-        console.log(atom)
-        console.log(reagent[i])
         if (atom == reagent[i]) {
           if (atomsOfReagent == 1) {
             resultSecondReagent = atomsOfProduct
             newSecondReagent = secondClean.map(e => {
-              return e + resultSecondProduct
+              if (isNaN(Number(e[e.length - 1]))) {
+                return e + atomsOfProduct
+              } else {
+                const number = e[e.length - 1]
+                return e.replace(number, atomsOfReagent)
+              }
             })
           } else {
             if (atomsOfProduct % 2 === 0 && atomsOfReagent % 2 === 0) {
@@ -396,17 +427,14 @@ function balance(numberOfReagentAtoms, numberOfProductAtoms) {
               resultSecondReagent = atomsOfReagent * atomsOfProduct
             }
             newSecondReagent = secondClean.map(e => {
-              return e[e.length - 1] + resultSecondReagent
+              const number = e[e.length - 1]
+              return e.replace(number, atomsOfReagent)
             })
           }
         }
       })
-    } else {
-      if (i < firstClean.length) {
-        newFirstReagent.push(firstClean[i])
-      }
-      if (i < secondClean.length) {
-        newSecondReagent.push(secondClean[i])
+      if (newSecondReagent == 0) {
+        newSecondReagent = secondClean
       }
     }
   }
@@ -426,43 +454,59 @@ function balance(numberOfReagentAtoms, numberOfProductAtoms) {
   console.log(resultReagent)
   console.log(resultProduct)
 
-  for (let i = 0; i < resultReagent.length; i++) {
+  for (let i = 0; i < resultProduct.length; i++) {
     const atomsOfReagent = resultReagent[i]
     const atomsOfProduct = resultProduct[i]
+
     console.log("Acc: " + atomsOfReagent + "  Actual: " + atomsOfProduct)
     if (atomsOfReagent > atomsOfProduct) {
       firstResultClean.forEach(atom => {
         if (atom == product[i]) {
-          console.log(atom)
-          console.log(product[i])
+          resultFirstProduct = atomsOfReagent
           if (atomsOfProduct == 1) {
             newFirstProduct = firstResultClean.map(e => {
-              return e + atomsOfReagent
+              if (isNaN(Number(e[e.length - 1]))) {
+                return e + atomsOfReagent
+              } else {
+                const number = e[e.length - 1]
+                return e.replace(number, atomsOfReagent)
+              }
             })
-            resultFirstProduct = atomsOfReagent
           } else {
+            console.log(atom)
+            console.log(product[i])
             if (atomsOfProduct % 2 === 0 && atomsOfReagent % 2 === 0) {
               resultFirstProduct = atomsOfProduct / 2
             } else {
-              console.log(atomsOfReagent)
-              console.log(atomsOfProduct)
               resultFirstProduct = atomsOfReagent * atomsOfProduct
             }
             newFirstProduct = firstResultClean.map(e => {
-              return e[e.length - 1] + resultFirstProduct
+              if (isNaN(Number(e[e.length - 1]))) {
+                return e + atomsOfReagent
+              } else {
+                const number = e[e.length - 1]
+                return e.replace(number, atomsOfReagent)
+              }
             })
           }
         } else {
           newFirstProduct = firstResultClean
         }
       })
+      if (newFirstProduct == 0) {
+        newFirstProduct = firstResultClean
+      }
       secondResultClean.forEach(atom => {
         if (atom == product[i]) {
-          console.log(atom)
-          console.log(product[i])
           if (atomsOfProduct == 1) {
             newSecondProduct = secondResultClean.map(e => {
-              return e + atomsOfReagent
+              if (isNaN(Number(e[e.length - 1]))) {
+                return e + atomsOfReagent
+              } else {
+                console.log(e)
+                const number = e[e.length - 1]
+                return e.replace(number, atomsOfReagent)
+              }
             })
             resultSecondProduct = atomsOfReagent
           } else {
@@ -472,19 +516,32 @@ function balance(numberOfReagentAtoms, numberOfProductAtoms) {
               resultSecondProduct = atomsOfReagent * atomsOfProduct
             }
             newSecondProduct = secondResultClean.map(e => {
-              return e[e.length - 1] + resultSecondProduct
+              if (isNaN(Number(e[e.length - 1]))) {
+                return e + atomsOfReagent
+              } else {
+                const number = e[e.length - 1]
+                return e.replace(number, atomsOfReagent)
+              }
             })
           }
         }
       })
+      if (newSecondProduct == 0) {
+        newSecondProduct = secondResultClean
+      }
     }
   }
 
-  const completed = [
-    resultFirstReagent,
-    resultSecondReagent,
-    resultFirstProduct,
-    resultSecondProduct
-  ]
-  return completed
+  if (resultReagent == resultProduct) {
+    const completed = [
+      resultFirstReagent,
+      resultSecondReagent,
+      resultFirstProduct,
+      resultSecondProduct
+    ]
+    return completed
+  } else {
+    console.log(resultReagent)
+    console.log(resultProduct)
+  }
 }
