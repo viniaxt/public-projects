@@ -11,10 +11,33 @@
  * Sera utilizado JS
  */
 
-// H2O => [H2, O], H3PO4 => [H3, P, O4], CaCO3 => [Ca, C, O3]
+const firstReagent = "K2Cr2O7"
+const secondReagent = "KOH"
+const first = transformToArray(firstReagent)
+const second = transformToArray(secondReagent)
+
+var firstClean = Object.assign([], first)
+var secondClean = Object.assign([], second)
+
+const firstProduct = "K2CrO4"
+const secondProduct = "H2O"
+const firstResult = transformToArray(firstProduct)
+const secondResult = transformToArray(secondProduct)
+
+const firstResultClean = Object.assign([], firstResult)
+const secondResultClean = Object.assign([], secondResult)
+
+const reagent = reducing(first, second)
+const product = reducing(firstResult, secondResult)
+
+var resultReagent = new Array()
+var resultProduct = new Array()
+
+numbering(reagent, product)
+const result = balance(resultReagent, resultProduct)
+console.log(result)
 
 function transformToArray(element) {
-  console.time("oi")
   const elementLength = element.length // 3
   const transformedArray = []
   let index = 0
@@ -68,13 +91,29 @@ function transformToArray(element) {
       }
 
       if (index != 0 && index != elementLength - 1) {
-        if (!verifyBeforeElement && verifyAfterElement) {
-          if (characterAfter == characterAfter.toLowerCase()) {
-            const total = actualCharacter + characterAfter
-            transformedArray.push(total)
-          } else {
-            const total = actualCharacter
-            transformedArray.push(total)
+        if (element.charAt(index + 2)) {
+          if (
+            !verifyBeforeElement &&
+            verifyAfterElement &&
+            isNaN(Number(element.charAt(index + 2)))
+          ) {
+            if (characterAfter == characterAfter.toLowerCase()) {
+              const total = actualCharacter + characterAfter
+              transformedArray.push(total)
+            } else {
+              const total = actualCharacter
+              transformedArray.push(total)
+            }
+          }
+        } else {
+          if (!verifyBeforeElement && verifyAfterElement) {
+            if (characterAfter == characterAfter.toLowerCase()) {
+              const total = actualCharacter + characterAfter
+              transformedArray.push(total)
+            } else {
+              const total = actualCharacter
+              transformedArray.push(total)
+            }
           }
         }
 
@@ -156,37 +195,23 @@ function transformToArray(element) {
       }
     }
   }
-  console.timeEnd("oi")
   return transformedArray
 }
 
-const first = transformToArray("H3PO4")
-
-const second = transformToArray("NaOH")
-
-const firstResult = transformToArray("Na3PO4")
-const secondResult = transformToArray("H2O")
-
-const reagent = reducingReagents(first, second)
-const product = reducingProducts(firstResult, secondResult)
-console.log(reagent)
-console.log(product)
-
 // function for comparing reagent and products
-function reducingReagents(firstReag, secondReag) {
-  const reagent = new Array()
+function reducing(first, second) {
+  const result = new Array()
   let i = 0
-  for (; i < firstReag.length; i++) {
-    const acc = firstReag[i]
-    secondReag.forEach((secondElement, secondIndex) => {
+  for (; i < first.length; i++) {
+    const acc = first[i]
+    second.forEach((secondElement, secondIndex) => {
       const actual = secondElement
-      console.log("Acc: " + acc + "  Actual: " + actual)
       if (acc[0] == actual[0]) {
         if (acc.length == 1 && actual.length == 1) {
           const total = acc + "2"
-          reagent.push(total)
-          secondReag.splice(secondIndex, 1)
-          firstReag.splice(i, 1)
+          result.push(total)
+          second.splice(secondIndex, 1)
+          first.splice(i, 1)
           i -= 1
         }
         if (
@@ -195,18 +220,17 @@ function reducingReagents(firstReag, secondReag) {
           !isNaN(Number(actual[1])) // false if number
         ) {
           const total = acc[0] + `${parseInt(actual[1]) + 1}`
-          reagent.push(total)
-          secondReag.splice(secondIndex, 1)
-          firstReag.splice(i, 1)
+          result.push(total)
+          second.splice(secondIndex, 1)
+          first.splice(i, 1)
           i -= 1
         }
         if (acc.length == 2 && actual.length == 1 && !isNaN(Number(acc[1]))) {
           const total = acc[0] + `${parseInt(acc[1]) + 1}`
-          reagent.push(total)
-          secondReag.splice(secondIndex, 1)
-          firstReag.splice(i, 1)
+          result.push(total)
+          second.splice(secondIndex, 1)
+          first.splice(i, 1)
           i -= 1
-          console.log("Terceiro")
         }
         if (
           acc.length == 2 &&
@@ -214,11 +238,10 @@ function reducingReagents(firstReag, secondReag) {
           !isNaN(Number(acc[1])) &&
           !isNaN(Number(actual[1])) // need to be number
         ) {
-          console.log("Quarto")
           const total = acc[0] + `${parseInt(actual[1]) + parseInt(acc[1])}`
-          reagent.push(total)
-          secondReag.splice(secondIndex, 1)
-          firstReag.splice(i, 1)
+          result.push(total)
+          second.splice(secondIndex, 1)
+          first.splice(i, 1)
           i -= 1
         }
         if (
@@ -227,11 +250,10 @@ function reducingReagents(firstReag, secondReag) {
           isNaN(Number(acc[1])) && // need to be string
           isNaN(Number(actual[1]))
         ) {
-          console.log("Quinto")
           const total = acc + "2"
-          reagent.push(total)
-          secondReag.splice(secondIndex, 1)
-          firstReag.splice(i, 1)
+          result.push(total)
+          second.splice(secondIndex, 1)
+          first.splice(i, 1)
           i -= 1
         }
         if (
@@ -239,126 +261,230 @@ function reducingReagents(firstReag, secondReag) {
           actual.length == 3 &&
           isNaN(Number(acc[1])) // need to be string
         ) {
-          console.log("Sexto")
           const total = acc + `${parseInt(actual[2]) + 1}`
-          reagent.push(total)
-          secondReag.splice(secondIndex, 1)
-          firstReag.splice(i, 1)
+          result.push(total)
+          second.splice(secondIndex, 1)
+          first.splice(i, 1)
           i -= 1
         }
         if (acc.length == 3 && actual.length == 2 && isNaN(Number(actual[1]))) {
-          console.log("Setimo")
           const total = actual + `${parseInt(acc[2] + 1)}`
-          reagent.push(total)
-          secondReag.splice(secondIndex, 1)
-          firstReag.splice(i, 1)
+          result.push(total)
+          second.splice(secondIndex, 1)
+          first.splice(i, 1)
           i -= 1
         }
         if (acc.length == 3 && actual.length == 3) {
-          console.log("Oitavo")
           const total =
             acc[0] + acc[1] + `${parseInt(acc[2] + parseInt(actual[2]))}`
-          reagent.push(total)
-          secondReag.splice(secondIndex, 1)
-          firstReag.splice(i, 1)
+          result.push(total)
+          second.splice(secondIndex, 1)
+          first.splice(i, 1)
           i -= 1
         }
       }
     })
   }
-  const completedReagent = reagent.concat(firstReag, secondReag).sort()
-  return completedReagent
+  const completed = result.concat(first, second).sort()
+  return completed
 }
 
-function reducingProducts(firstProd, secondProd) {
-  const product = new Array()
+function numbering(reducedReagent, reducedProduct) {
   let i = 0
-  for (; i < firstProd.length; i++) {
-    const acc = firstProd[i]
-    secondProd.forEach((secondElement, secondIndex) => {
-      const actual = secondElement
-      console.log("Acc: " + acc + "  Actual: " + actual)
-      if (acc[0] == actual[0]) {
-        if (acc.length == 1 && actual.length == 1) {
-          const total = acc + "2"
-          product.push(total)
-          secondProd.splice(secondIndex, 1)
-          firstProd.splice(i, 1)
-          i -= 1
-        }
-        if (
-          acc.length == 1 &&
-          actual.length == 2 &&
-          !isNaN(Number(actual[1])) // false if number
-        ) {
-          const total = acc[0] + `${parseInt(actual[1]) + 1}`
-          product.push(total)
-          secondProd.splice(secondIndex, 1)
-          firstProd.splice(i, 1)
-          i -= 1
-        }
-        if (acc.length == 2 && actual.length == 1 && !isNaN(Number(acc[1]))) {
-          const total = acc[0] + `${parseInt(acc[1]) + 1}`
-          product.push(total)
-          secondProd.splice(secondIndex, 1)
-          firstProd.splice(i, 1)
-          i -= 1
-        }
-        if (
-          acc.length == 2 &&
-          actual.length == 2 &&
-          !isNaN(Number(acc[1])) &&
-          !isNaN(Number(actual[1])) // need to be number
-        ) {
-          const total = acc[0] + `${parseInt(actual[1]) + parseInt(acc[1])}`
-          product.push(total)
-          secondProd.splice(secondIndex, 1)
-          firstProd.splice(i, 1)
-          i -= 1
-        }
-        if (
-          acc.length == 2 &&
-          actual.length == 2 &&
-          isNaN(Number(acc[1])) && // need to be string
-          isNaN(Number(actual[1]))
-        ) {
-          const total = acc + "2"
-          product.push(total)
-          secondProd.splice(secondIndex, 1)
-          firstProd.splice(i, 1)
-          i -= 1
-        }
-        if (
-          acc.length == 2 &&
-          actual.length == 3 &&
-          isNaN(Number(acc[1])) // need to be string
-        ) {
-          const total = acc + `${parseInt(actual[2]) + 1}`
-          product.push(total)
-          secondProd.splice(secondIndex, 1)
-          firstProd.splice(i, 1)
-          i -= 1
-        }
-        if (acc.length == 3 && actual.length == 2 && isNaN(Number(actual[1]))) {
-          const total = actual + `${parseInt(acc[2] + 1)}`
-          product.push(total)
-          secondProd.splice(secondIndex, 1)
-          firstProd.splice(i, 1)
-          i -= 1
-        }
-        if (acc.length == 3 && actual.length == 3) {
-          const total =
-            acc[0] + acc[1] + `${parseInt(acc[2] + parseInt(actual[2]))}`
-          product.push(total)
-          secondProd.splice(secondIndex, 1)
-          firstProd.splice(i, 1)
-          i -= 1
-        }
+  console.log("REAGENT: " + reducedReagent)
+  console.log("PRODUCT: " + reducedProduct)
+  resultReagent.splice(0, resultReagent.length)
+  resultProduct.splice(0, resultProduct.length)
+  if (reducedReagent.length != reducedProduct.length) {
+    console.log("Reduced reagent: " + reducedReagent)
+    console.log("Reduced product: " + reducedProduct)
+    return console.log("Sorry, but it's impossible to balance wrong equations")
+  }
+  for (; i < reducedReagent.length; i++) {
+    const reagentAtom = reducedReagent[i]
+    const productAtom = reducedProduct[i]
+
+    const verifyLastValueOfReagent = isNaN(
+      Number(reagentAtom[reagentAtom.length - 1])
+    )
+    const verifyLastValueOfProduct = isNaN(
+      Number(productAtom[productAtom.length - 1])
+    ) // false if number
+
+    // max diff between length is 1 point
+    if (reagentAtom.length - productAtom.length == 1) {
+      const totalReagent = parseInt(reagentAtom[reagentAtom.length - 1])
+      const totalProduct = 1
+      resultReagent.push(totalReagent)
+      resultProduct.push(totalProduct)
+    }
+    if (reagentAtom.length - productAtom.length == 0) {
+      if (verifyLastValueOfReagent && verifyLastValueOfProduct) {
+        const totalReagent = 1
+        const totalProduct = 1
+        resultReagent.push(totalReagent)
+        resultProduct.push(totalProduct)
       }
-    })
+      if (!verifyLastValueOfReagent && !verifyLastValueOfProduct) {
+        const totalReagent = parseInt(reagentAtom[reagentAtom.length - 1])
+        const totalProduct = parseInt(productAtom[productAtom.length - 1])
+        resultReagent.push(totalReagent)
+        resultProduct.push(totalProduct)
+      }
+    }
+    if (reagentAtom.length - productAtom.length == -1) {
+      const totalReagent = 1
+      const totalProduct = parseInt(productAtom[productAtom.length - 1])
+      resultReagent.push(totalReagent)
+      resultProduct.push(totalProduct)
+    }
+  }
+  const completed = resultReagent.concat("kk eae men", resultProduct)
+  return completed
+}
+
+function balance(numberOfReagentAtoms, numberOfProductAtoms) {
+  var resultFirstReagent = 1 // H3PO4 => 1H3PO4
+  var resultSecondReagent = 1 // NaOH => 3NaOH
+  var resultFirstProduct = 1 // Na3PO4 => 1Na3PO4
+  var resultSecondProduct = 1 // H2O => 3 H2O
+
+  var newFirstReagent = []
+  var newSecondReagent = []
+  var newFirstProduct = []
+  var newSecondProduct = []
+
+  console.log("CHEGOU NO BALANCE!!")
+  // first, we are going to get atomsOfProduct > atomsOfReagent
+  for (let i = 0; i < numberOfReagentAtoms.length; i++) {
+    const atomsOfReagent = numberOfReagentAtoms[i]
+    const atomsOfProduct = numberOfProductAtoms[i]
+    console.log("Acc: " + atomsOfReagent + "  Actual: " + atomsOfProduct)
+    if (atomsOfReagent < atomsOfProduct) {
+      firstClean.forEach(atom => {
+        if (atom == reagent[i]) {
+          if (atomsOfReagent == 1) {
+            newFirstReagent = firstClean.map(e => {
+              return e + atomsOfProduct
+            })
+            resultFirstReagent = atomsOfProduct
+          } else {
+            if (atomsOfProduct % 2 === 0 && atomsOfReagent % 2 === 0) {
+              resultFirstReagent = (atomsOfReagent * atomsOfProduct) / 2
+            } else {
+              resultFirstReagent = atomsOfReagent * atomsOfProduct
+            }
+            newFirstReagent = firstClean.map(e => {
+              return e[e.length - 1] + resultfirstReagent
+            })
+          }
+        }
+      })
+      secondClean.forEach(atom => {
+        console.log(atom)
+        console.log(reagent[i])
+        if (atom == reagent[i]) {
+          if (atomsOfReagent == 1) {
+            resultSecondReagent = atomsOfProduct
+            newSecondReagent = secondClean.map(e => {
+              return e + resultSecondProduct
+            })
+          } else {
+            if (atomsOfProduct % 2 === 0 && atomsOfReagent % 2 === 0) {
+              resultSecondReagent = (atomsOfReagent * atomsOfProduct) / 2
+            } else {
+              resultSecondReagent = atomsOfReagent * atomsOfProduct
+            }
+            newSecondReagent = secondClean.map(e => {
+              return e[e.length - 1] + resultSecondReagent
+            })
+          }
+        }
+      })
+    } else {
+      if (i < firstClean.length) {
+        newFirstReagent.push(firstClean[i])
+      }
+      if (i < secondClean.length) {
+        newSecondReagent.push(secondClean[i])
+      }
+    }
   }
 
-  const completedProduct = product.concat(firstProd, secondProd).sort()
+  console.log("NEW FIRST: " + newFirstReagent)
+  console.log("NEW SECOND: " + newSecondReagent)
+  const newReagent = reducing(newFirstReagent, newSecondReagent)
+  const newProduct = reducing(firstResultClean, secondResultClean)
 
-  return completedProduct
+  console.log(newReagent)
+  console.log(newProduct)
+  console.log(resultReagent)
+  console.log(resultProduct)
+
+  numbering(newReagent, newProduct)
+
+  console.log(resultReagent)
+  console.log(resultProduct)
+
+  for (let i = 0; i < resultReagent.length; i++) {
+    const atomsOfReagent = resultReagent[i]
+    const atomsOfProduct = resultProduct[i]
+    console.log("Acc: " + atomsOfReagent + "  Actual: " + atomsOfProduct)
+    if (atomsOfReagent > atomsOfProduct) {
+      firstResultClean.forEach(atom => {
+        if (atom == product[i]) {
+          console.log(atom)
+          console.log(product[i])
+          if (atomsOfProduct == 1) {
+            newFirstProduct = firstResultClean.map(e => {
+              return e + atomsOfReagent
+            })
+            resultFirstProduct = atomsOfReagent
+          } else {
+            if (atomsOfProduct % 2 === 0 && atomsOfReagent % 2 === 0) {
+              resultFirstProduct = atomsOfProduct / 2
+            } else {
+              console.log(atomsOfReagent)
+              console.log(atomsOfProduct)
+              resultFirstProduct = atomsOfReagent * atomsOfProduct
+            }
+            newFirstProduct = firstResultClean.map(e => {
+              return e[e.length - 1] + resultFirstProduct
+            })
+          }
+        } else {
+          newFirstProduct = firstResultClean
+        }
+      })
+      secondResultClean.forEach(atom => {
+        if (atom == product[i]) {
+          console.log(atom)
+          console.log(product[i])
+          if (atomsOfProduct == 1) {
+            newSecondProduct = secondResultClean.map(e => {
+              return e + atomsOfReagent
+            })
+            resultSecondProduct = atomsOfReagent
+          } else {
+            if (atomsOfProduct % 2 === 0 && atomsOfReagent % 2 === 0) {
+              resultSecondProduct = atomsOfReagent / 2
+            } else {
+              resultSecondProduct = atomsOfReagent * atomsOfProduct
+            }
+            newSecondProduct = secondResultClean.map(e => {
+              return e[e.length - 1] + resultSecondProduct
+            })
+          }
+        }
+      })
+    }
+  }
+
+  const completed = [
+    resultFirstReagent,
+    resultSecondReagent,
+    resultFirstProduct,
+    resultSecondProduct
+  ]
+  return completed
 }
